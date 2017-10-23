@@ -133,6 +133,7 @@ class MatchesFactsAggregator:
         key_map = {'home': 0, 'away': 3, 'none': 1}
         self._add_to_counter(match['away'], 'score_competition_away', key_map[match_winner])
 
+        #Días sin ganar
         if match_winner == 'home':
             self._set_counter(match['home'], 'num_days_without_victory', 0)
             self._add_to_counter(match['away'], 'num_days_without_victory', 1)
@@ -145,6 +146,7 @@ class MatchesFactsAggregator:
             self._add_to_counter(match['home'], 'num_days_without_victory', 1)
             self._add_to_counter(match['away'], 'num_days_without_victory', 1)
 
+        #Días sin marcar
         if int(match['score_home']) > 0:
             self._set_counter(match['home'], 'num_days_without_goals', 0)
         else:
