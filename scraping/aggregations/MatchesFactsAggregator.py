@@ -4,7 +4,12 @@ import pymongo
 
 class MatchesFactsAggregator:
     '''
-    Genera la tabla de facts partidos en csv
+    Genera la tabla de facts partidos en csv.
+
+    En self.counters se van actualizando los valores incrementales, tipo los goles marcados a la fecha.
+
+    Para modificar los ficheros que genera hay que definir el template de los registros que se van
+    generando en self.counter_template, y poner conforme los valores en _update_counters
     '''
     def __init__(self):
         self.prefix = 'laliga_web'
@@ -12,10 +17,6 @@ class MatchesFactsAggregator:
         self.collection = 'ordered_matches'
         self.results = []
 
-        '''
-        Mantenemos un diccionario indexado por nombre del equipo 
-        con los valores de las aggregaciones
-        '''
         self.counters = {}
         self.teams_recent_history = {}
         self.counter_template = {
@@ -65,10 +66,19 @@ class MatchesFactsAggregator:
 
 
     def write_data_mongo(self):
+        '''
+        Escribe en mongo los resultados del proceso
+        :return:
+        '''
         self.mongo_wrapper.drop_collection('aggregated_results')
         self.mongo_wrapper.write_dictionaries_list('aggregated_results', self.results)
 
     def write_data_csv(self, filename):
+        '''
+        Exporta a csv los resultados del proceso
+        :param filename:
+        :return:
+        '''
         import pandas as pd
 
         data = {}
