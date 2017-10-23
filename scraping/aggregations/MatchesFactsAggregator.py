@@ -50,66 +50,6 @@ class MatchesFactsAggregator:
         }
 
 
-
-    def process_matches_played(self, season):
-        self._init_counters()
-        for match in self._collection().find({'season': season}).sort([('day_yyyymmgg', pymongo.ASCENDING)]):
-            entry = self._process_match(match)
-
-            entry['season'] = match['season']
-
-            entry['team_home'] = match['home']
-            entry['team_away'] = match['away']
-
-            entry['winner'] = self._winner(match)
-
-            self._add_to_results(entry)
-
-
-
-    def write_data_mongo(self):
-        '''
-        Escribe en mongo los resultados del proceso
-        :return:
-        '''
-        self.mongo_wrapper.drop_collection('aggregated_results')
-        self.mongo_wrapper.write_dictionaries_list('aggregated_results', self.results)
-
-    def write_data_csv(self, filename):
-        '''
-        Exporta a csv los resultados del proceso
-        :param filename:
-        :return:
-        '''
-        import pandas as pd
-
-        data = {}
-        for column in self.results[0].keys():
-            data[column] = []
-
-        for result in self.results:
-            for attribute_name in result.keys():
-                data[attribute_name].append(result[attribute_name])
-
-        repo = pd.DataFrame(data)
-        repo.to_csv(filename)
-
-    def _process_match(self, match):
-
-        home_stats = self.counters[match['home']]
-        away_stats = self.counters[match['away']]
-
-        entry = {}
-
-        for key in home_stats.keys():
-            entry[key + '_home'] = home_stats[key]
-
-        for key in away_stats.keys():
-            entry[key + '_away'] = away_stats[key]
-
-        self._update_counters(match)
-        return entry
-
     def _update_counters(self, match):
 
         match_winner = self._winner(match)
@@ -171,6 +111,66 @@ class MatchesFactsAggregator:
         else:
             self._add_to_counter(match['away'], 'num_days_without_goals', 1)
 
+
+
+    def process_matches_played(self, season):
+        self._init_counters()
+        for match in self._collection().find({'season': season}).sort([('day_yyyymmgg', pymongo.ASCENDING)]):
+            entry = self._process_match(match)
+
+            entry['season'] = match['season']
+
+            entry['team_home'] = match['home']
+            entry['team_away'] = match['away']
+
+            entry['winner'] = self._winner(match)
+
+            self._add_to_results(entry)
+
+
+
+    def write_data_mongo(self):
+        '''
+        Escribe en mongo los resultados del proceso
+        :return:
+        '''
+        self.mongo_wrapper.drop_collection('aggregated_results')
+        self.mongo_wrapper.write_dictionaries_list('aggregated_results', self.results)
+
+    def write_data_csv(self, filename):
+        '''
+        Exporta a csv los resultados del proceso
+        :param filename:
+        :return:
+        '''
+        import pandas as pd
+
+        data = {}
+        for column in self.results[0].keys():
+            data[column] = []
+
+        for result in self.results:
+            for attribute_name in result.keys():
+                data[attribute_name].append(result[attribute_name])
+
+        repo = pd.DataFrame(data)
+        repo.to_csv(filename)
+
+    def _process_match(self, match):
+
+        home_stats = self.counters[match['home']]
+        away_stats = self.counters[match['away']]
+
+        entry = {}
+
+        for key in home_stats.keys():
+            entry[key + '_home'] = home_stats[key]
+
+        for key in away_stats.keys():
+            entry[key + '_away'] = away_stats[key]
+
+        self._update_counters(match)
+        return entry
 
     def _winner(self, match):
         if int(match['score_home']) > int(match['score_away']):
