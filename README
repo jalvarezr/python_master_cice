@@ -1,0 +1,24 @@
+inventario de scripts en orden lógico
+
+laliga.py
+- baja el histórico desde laliga.es
+
+marca_results.py
+- baja los resultados y los partidos pendientes del año en curso
+
+as.py
+- baja los las clasificaciones desde la web de as
+
+
+reindex_historic_archive.py
+- "indexa" el historico añadiendo una colleccion 'laliga_web_ordered_matches' abtenida añadiando columna en formato yyyymmdd a la collección
+de resultados
+
+merge_results.py
+- genera la collección etl_results_all con los datos de archivo y temporada corriente
+
+
+**************************
+
+matches_aggregation.py es un script que genera los campos calculados del esquema de Javier
+
