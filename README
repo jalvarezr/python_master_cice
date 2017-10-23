@@ -11,7 +11,7 @@ as.py
 
 
 reindex_historic_archive.py
-- "indexa" el historico añadiendo una colleccion 'laliga_web_ordered_matches' abtenida añadiando columna en formato yyyymmdd a la collección
+- "indexa" el historico añadiendo una colleccion 'laliga_web_ordered_matches' obtenida añadiendo una columna en formato yyyymmdd a la collección
 de resultados
 
 merge_results.py
