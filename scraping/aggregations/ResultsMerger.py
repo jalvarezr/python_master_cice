@@ -1,5 +1,6 @@
 from scraping.core.prefixed_mongo_wrapper import PrefixedMongoWrapper
 from scraping.core.stdout_logger import Logger
+from scraping.aggregations.TeamsNormalizer import TeamsNormalizer
 
 import scraping.laliga.utils
 import pymongo
@@ -11,6 +12,7 @@ class ResultsMerger:
 
         self.logger = Logger(2)
         self.mongo_wrapper = PrefixedMongoWrapper('aggregated_match_results')
+        self.mapper = TeamsNormalizer()
 
         self.template = {'season': 'primera/2017-18',
                          'day_num': '',
@@ -83,8 +85,8 @@ class ResultsMerger:
 
                 entry = self.template.copy()
                 entry['day_num'] = int(day['day']['num_day'].replace('Jornada', '').strip())
-                entry['home'] = match['home']
-                entry['away'] = match['away']
+                entry['home'] = self.mapper.find_team_id('marca', match['home'])
+                entry['away'] = self.mapper.find_team_id('marca', match['away'])
 
                 scores = self._extract_scores(match['result'])
 
