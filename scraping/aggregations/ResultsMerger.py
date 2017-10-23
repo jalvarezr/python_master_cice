@@ -9,7 +9,7 @@ class ResultsMerger:
 
     def __init__(self):
 
-        self.logger = Logger(0)
+        self.logger = Logger(2)
         self.mongo_wrapper = PrefixedMongoWrapper('aggregated_match_results')
 
         self.template = {'season': 'primera/2017-18',
@@ -19,9 +19,25 @@ class ResultsMerger:
                          'score_home': '',
                          'score_away': ''}
 
+    def merge(self):
+        results = []
+        results += self._get_archive_results()
+        results += self._get_current_results()
+
+        self.logger.debug('Processed ' + str(len(results)) + ' matches')
+        return results
+
+    def save(self, result):
+        self.logger.debug('Saving')
+        wrapper = PrefixedMongoWrapper('etl_results')
+        wrapper.drop_collection('all')
+        wrapper.write_dictionaries_list('all', result)
+        self.logger.debug('Done')
+
+
 
     def _get_archive_results(self):
-
+        self.logger.debug('Getting archive results')
         wrapper = scraping.laliga.utils.create_mongo_writer()
         #archive = wrapper.get_collection('ordered_matches').find({'day_yyyymmgg': {"$gt": '20170101'}}).sort([('day_yyyymmgg', pymongo.ASCENDING)])
         archive = wrapper.get_collection('ordered_matches').find().sort([('day_yyyymmgg', pymongo.ASCENDING)])
@@ -43,19 +59,6 @@ class ResultsMerger:
 
         return result
 
-    def merge(self):
-        results = []
-        results += self._get_archive_results()
-        results += self._get_current_results()
-
-        return results
-
-    def save(self, result):
-        wrapper = PrefixedMongoWrapper('etl_results')
-        wrapper.drop_collection('all')
-        wrapper.write_dictionaries_list('all', result)
-
-
     def _extract_scores(self, text):
 
         result = {}
@@ -69,6 +72,8 @@ class ResultsMerger:
         return result
 
     def _get_current_results(self):
+        self.logger.debug('Getting current season results')
+
         result = []
         wrapper = PrefixedMongoWrapper('marca')
 

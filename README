@@ -1,7 +1,8 @@
-inventario de scripts en orden lógico
+inventario de scripts
 
-laliga.py
-- baja el histórico desde laliga.es
+Al tener en mongo una base de datos con solo el historico, se general las collecciones ejecutando setup.py
+
+Las operaciones que realiza se pueden ejecutar por separado con los siguientes:
 
 marca_results.py
 - baja los resultados y los partidos pendientes del año en curso
@@ -20,5 +21,9 @@ merge_results.py
 
 **************************
 
-matches_aggregation.py es un script que genera los campos calculados del esquema de Javier
+matches_aggregation.py
+- es un script que genera los campos calculados del esquema de Javier
+
+laliga.py
+- baja el histórico desde laliga.es
 

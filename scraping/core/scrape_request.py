@@ -12,6 +12,9 @@ class Sender:
         self.logger = logger
         self.delay = 0
 
+    def set_debug_level(self, level):
+        self.logger.set_detail_level(level)
+
     def set_delay(self, delay):
         self.delay = delay
 

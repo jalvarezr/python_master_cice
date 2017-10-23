@@ -3,6 +3,7 @@ import datetime
 from bs4 import BeautifulSoup
 from scraping.core import prefixed_mongo_wrapper
 from scraping.core import scrape_request
+from scraping.core.stdout_logger import Logger
 
 class AsClassificationScraper:
 
@@ -10,6 +11,7 @@ class AsClassificationScraper:
         self.writer_obj = False
         self.collection = 'as_classifications_data'
         self.started = datetime.datetime.now().isoformat()
+        self.logger = Logger(2)
 
     def writer(self):
 
@@ -19,10 +21,10 @@ class AsClassificationScraper:
         return self.writer_obj
 
     def scrape_page(self):
-
-        raw_html = scrape_request.Sender().get('https://resultados.as.com/resultados/futbol/primera/clasificacion/', {})
+        sender = scrape_request.Sender()
+        sender.set_debug_level(2)
+        raw_html = sender.get('https://resultados.as.com/resultados/futbol/primera/clasificacion/', {})
         self.process_page(raw_html)
-
 
     def process_page(self, raw_html):
         html = BeautifulSoup(raw_html, 'html.parser')
@@ -58,5 +60,4 @@ class AsClassificationScraper:
                 else:
                     result['away'][header[cell_counter]] = cell.getText()
             cell_counter = cell_counter + 1
-
         self.writer().write_dictionary('classification', result)

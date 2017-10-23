@@ -1,4 +1,5 @@
 from scraping.core.prefixed_mongo_wrapper import PrefixedMongoWrapper
+from scraping.core.stdout_logger import Logger
 import pandas as pd
 import os
 
@@ -9,6 +10,7 @@ class TeamsNormalizer:
         self.mongo_wrapper = PrefixedMongoWrapper('teams_inventory')
         self.master = self._get_laliga_teams()
         self.default_csv_filename = './teams_mapping.csv'
+        self.logger = Logger(0)
 
         self.source_collections = {
             'laliga': 'laliga_web_primera_results',
@@ -29,10 +31,9 @@ class TeamsNormalizer:
 
     def _get_raw_data(self):
         if not os.path.isfile(self.default_csv_filename):
-            print('Creating ' + self.default_csv_filename)
             data = self.normalize()
             self.save_csv(data)
-            print('Done')
+
 
         return pd.read_csv(self.default_csv_filename)
 
@@ -57,7 +58,7 @@ class TeamsNormalizer:
 
 
     def normalize(self):
-
+        self.logger.debug('Normalizing data...')
         result = {
             'master': self._get_laliga_teams(),
             'marca': self._normalize_one(self._get_marca_teams()),
@@ -67,25 +68,11 @@ class TeamsNormalizer:
         return result
 
     def save_csv(self, result):
-
+        self.logger.debug('Creating ' + self.default_csv_filename)
         csv_filename = self.default_csv_filename
-
 
         repo = pd.DataFrame(result)
         repo.to_csv(csv_filename)
-
-    def save_mongo(self, result):
-
-        mongo_data = []
-
-        keys = result.keys()
-        for i in range(0, len(result['master']) - 1):
-            entry = {}
-            for key in keys:
-                entry[key] = result[key][i]
-            mongo_data.append(entry)
-
-        print(mongo_data)
 
 
     def _normalize_one(self, teams):

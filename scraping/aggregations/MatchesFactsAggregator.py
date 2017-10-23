@@ -180,12 +180,9 @@ class MatchesFactsAggregator:
         self.results.append(entry)
 
     def _add_to_counter(self, team, key, qty):
-
-        #print(team + ' ' + ' ' + key + ' ' + str(qty))
         self.counters[team][key] += int(qty)
 
     def _set_counter(self, team, key, value):
-        print(team + ' ' + ' ' + key + ' ' + str(value))
         self.counters[team][key] = value
 
     def reindex(self):
