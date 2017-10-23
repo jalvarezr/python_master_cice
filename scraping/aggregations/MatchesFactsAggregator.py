@@ -18,6 +18,8 @@ class MatchesFactsAggregator:
         self.results = []
 
         self.counters = {}
+
+        #Diccionario con los datos recientes. Ver self._update_counters
         self.teams_recent_history = {}
         self.counter_template = {
             'played_home': 0,
@@ -110,6 +112,8 @@ class MatchesFactsAggregator:
 
     def _update_counters(self, match):
 
+        match_winner = self._winner(match)
+
         #Goles hechos por cada equipo
         self._add_to_counter(match['home'], 'goals_scored_home', match['score_home'])
         self._add_to_counter(match['away'], 'goals_scored_away', match['score_away'])
@@ -117,11 +121,11 @@ class MatchesFactsAggregator:
         self._add_to_counter(match['home'], 'goals_conceded_home', match['score_away'])
         self._add_to_counter(match['away'], 'goals_conceded_away', match['score_home'])
 
+        #añado al historiar los goles hechos
         self.teams_recent_history[match['home']]['goals'].append(int(match['score_home']))
         self.teams_recent_history[match['away']]['goals'].append(int(match['score_away']))
 
-        match_winner = self._winner(match)
-
+        #Suma de los goles hechos en los últimos 5 días
         self._set_counter(match['home'], 'ranking', sum(self.teams_recent_history[match['home']]['goals'][-5:]))
         self._set_counter(match['away'], 'ranking', sum(self.teams_recent_history[match['away']]['goals'][-5:]))
 
