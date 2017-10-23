@@ -1,6 +1,6 @@
 inventario de scripts
 
-Al tener en mongo una base de datos con solo el historico, se general las collecciones ejecutando setup.py
+Al tener en mongo una base de datos con solo el historico, se generan las collecciones ejecutando setup.py
 
 Las operaciones que realiza se pueden ejecutar por separado con los siguientes:
 
