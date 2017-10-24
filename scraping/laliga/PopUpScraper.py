@@ -8,6 +8,7 @@ class PopUpScraper:
     def __init__(self, match_id,  writer):
         self.match_id = match_id
         self.sender = scrape_request.Sender()
+        self.sender.set_debug_level(0)
         self.sender.set_delay(1)
         self.writer = writer
 

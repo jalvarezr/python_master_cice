@@ -1,17 +1,17 @@
 ,as,marca,master
 0,,,Arenas Club
-1,Espanyol,Espanyol,RCD Espanyol
-2,R. Sociedad,R. Sociedad,Real Sociedad
-3,Real Madrid,R. Madrid,Real Madrid
-4,,,R. Racing C.
+1,Betis,Betis,Real Betis
+2,Espanyol,Espanyol,RCD Espanyol
+3,,,R. Oviedo
+4,Valencia,Valencia,Valencia CF
 5,Athletic,Athletic,Athletic Club
-6,,,Atlético de Madrid
-7,Barcelona,Barcelona,FC Barcelona
-8,,,CE Europa
-9,,,Real Unión Club
-10,,,Real Betis
-11,,,R. Oviedo
-12,Valencia,Valencia,Valencia CF
+6,Barcelona,Barcelona,FC Barcelona
+7,,,R. Racing C.
+8,R. Sociedad,R. Sociedad,Real Sociedad
+9,Real Madrid,R. Madrid,Real Madrid
+10,Atlético,Atlético,Atlético de Madrid
+11,,,CE Europa
+12,,,Real Unión Club
 13,,,Hércules CF
 14,,,R. Zaragoza
 15,Celta,Celta,RC Celta
@@ -31,7 +31,7 @@
 29,,,R. Jaén
 30,,,Lleida Esportiu
 31,Las Palmas,Las Palmas,UD Las Palmas
-32,,,Atético Tetuán
+32,Atlético,Atlético,Atético Tetuán
 33,,,Córdoba CF
 34,,,Pontevedra CF
 35,,,Elche CF
@@ -49,14 +49,15 @@
 47,,,CD Logroñés
 48,,,Albacete B.
 49,,,Real Burgos CF
-50,,,SD Compostela
-51,,,CF Extremadura
-52,Villarreal,Villarreal,Villarreal CF
-53,,,CD Numancia
-54,Málaga,Málaga,Málaga CF
+50,,,CF Extremadura
+51,Villarreal,Villarreal,Villarreal CF
+52,,,SD Compostela
+53,Málaga,Málaga,Málaga CF
+54,,,CD Numancia
 55,,,Mérida CP
 56,Getafe,Getafe,Getafe CF
 57,,,UD Almería
 58,,,Xerez CD
 59,Eibar,Eibar,SD Eibar
 60,Leganés,Leganés,CD Leganés
+,,Girona,Girona

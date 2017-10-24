@@ -24,10 +24,15 @@ def build_seasons(league, year_start):
     result = []
     for year in range(year_start, 2017):
 
-        year_to_postfix = str((int(str(year)[2:]) + 1))
-        if len(year_to_postfix) == 1:
-            year_to_postfix = '0' + year_to_postfix
+        # Millenium bug :-)
+        if year == 1999:
+            season = league + '/1999-00'
+        else:
+            year_to_postfix = str((int(str(year)[2:]) + 1))
+            if len(year_to_postfix) == 1:
+                year_to_postfix = '0' + year_to_postfix
 
-        season = league + '/' + str(year) + '-' + year_to_postfix
+            season = league + '/' + str(year) + '-' + year_to_postfix
+
         result.append(season)
     return result

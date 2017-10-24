@@ -27,6 +27,7 @@ class TeamsNormalizer:
         for result in results['master']:
             return result
 
+        self.logger.error(100, 'Cannot find map for ' + source + ': ' + team)
         return ''
 
     def _get_raw_data(self):
@@ -91,7 +92,7 @@ class TeamsNormalizer:
 
                 matcher = SequenceMatcher(None, master_team, team)
                 similarity = matcher.ratio()
-                if (similarity > best_similarity) and (similarity > 0.7):
+                if (similarity > best_similarity) and (similarity > 0.6):
                     best_similarity = similarity
                     matched = team
 

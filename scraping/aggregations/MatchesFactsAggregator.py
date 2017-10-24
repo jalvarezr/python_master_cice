@@ -13,9 +13,9 @@ class MatchesFactsAggregator:
     generando en self.counter_template, y poner conforme los valores en _update_counters
     '''
     def __init__(self):
-        self.prefix = 'etl_results'
+        self.prefix = 'etl'
         self.mongo_wrapper = PrefixedMongoWrapper(self.prefix)
-        self.collection = 'all'
+        self.collection = 'results_all'
         self.results = []
 
         self.counters = {}
@@ -56,62 +56,64 @@ class MatchesFactsAggregator:
 
         match_winner = self._winner(match)
 
-        #Goles hechos por cada equipo
-        self._add_to_counter(match['home'], 'goals_scored_home', match['score_home'])
-        self._add_to_counter(match['away'], 'goals_scored_away', match['score_away'])
+        if match_winner != '':
 
-        self._add_to_counter(match['home'], 'goals_conceded_home', match['score_away'])
-        self._add_to_counter(match['away'], 'goals_conceded_away', match['score_home'])
+            # Goles hechos por cada equipo
+            self._add_to_counter(match['home'], 'goals_scored_home', match['score_home'])
+            self._add_to_counter(match['away'], 'goals_scored_away', match['score_away'])
 
-        #añado al historiar los goles hechos
-        self.teams_recent_history[match['home']]['goals'].append(int(match['score_home']))
-        self.teams_recent_history[match['away']]['goals'].append(int(match['score_away']))
+            self._add_to_counter(match['home'], 'goals_conceded_home', match['score_away'])
+            self._add_to_counter(match['away'], 'goals_conceded_away', match['score_home'])
 
-        #Suma de los goles hechos en los últimos 5 días
-        self._set_counter(match['home'], 'ranking', sum(self.teams_recent_history[match['home']]['goals'][-5:]))
-        self._set_counter(match['away'], 'ranking', sum(self.teams_recent_history[match['away']]['goals'][-5:]))
+            # añado al historiar los goles hechos
+            self.teams_recent_history[match['home']]['goals'].append(int(match['score_home']))
+            self.teams_recent_history[match['away']]['goals'].append(int(match['score_away']))
 
-        #Partidos jugados
-        self._add_to_counter(match['home'], 'played_home', 1)
-        self._add_to_counter(match['away'], 'played_away', 1)
+            # Suma de los goles hechos en los últimos 5 días
+            self._set_counter(match['home'], 'ranking', sum(self.teams_recent_history[match['home']]['goals'][-5:]))
+            self._set_counter(match['away'], 'ranking', sum(self.teams_recent_history[match['away']]['goals'][-5:]))
 
-        #Partidos ganados, empatados, perdidos
-        key_map = {'home': 'matches_won_home', 'away': 'matches_lost_home', 'none': 'matches_tied_home'}
-        self._add_to_counter(match['home'], key_map[match_winner], 1)
+            # Partidos jugados
+            self._add_to_counter(match['home'], 'played_home', 1)
+            self._add_to_counter(match['away'], 'played_away', 1)
 
-        key_map = {'home': 'matches_lost_away', 'away': 'matches_won_away', 'none': 'matches_tied_away'}
-        self._add_to_counter(match['away'], key_map[match_winner], 1)
+            # Partidos ganados, empatados, perdidos
+            key_map = {'home': 'matches_won_home', 'away': 'matches_lost_home', 'none': 'matches_tied_home'}
+            self._add_to_counter(match['home'], key_map[match_winner], 1)
 
-        #Puntos
-        key_map = {'home': 3, 'away': 0, 'none': 1}
-        self._add_to_counter(match['home'], 'score_competition_home', key_map[match_winner])
+            key_map = {'home': 'matches_lost_away', 'away': 'matches_won_away', 'none': 'matches_tied_away'}
+            self._add_to_counter(match['away'], key_map[match_winner], 1)
 
-        key_map = {'home': 0, 'away': 3, 'none': 1}
-        self._add_to_counter(match['away'], 'score_competition_away', key_map[match_winner])
+            # Puntos
+            key_map = {'home': 3, 'away': 0, 'none': 1}
+            self._add_to_counter(match['home'], 'score_competition_home', key_map[match_winner])
 
-        #Días sin ganar
-        if match_winner == 'home':
-            self._set_counter(match['home'], 'num_days_without_victory', 0)
-            self._add_to_counter(match['away'], 'num_days_without_victory', 1)
+            key_map = {'home': 0, 'away': 3, 'none': 1}
+            self._add_to_counter(match['away'], 'score_competition_away', key_map[match_winner])
 
-        if match_winner == 'away':
-            self._set_counter(match['away'], 'num_days_without_victory', 0)
-            self._add_to_counter(match['home'], 'num_days_without_victory', 1)
+            # Días sin ganar
+            if match_winner == 'home':
+                self._set_counter(match['home'], 'num_days_without_victory', 0)
+                self._add_to_counter(match['away'], 'num_days_without_victory', 1)
 
-        if match_winner == 'none':
-            self._add_to_counter(match['home'], 'num_days_without_victory', 1)
-            self._add_to_counter(match['away'], 'num_days_without_victory', 1)
+            if match_winner == 'away':
+                self._set_counter(match['away'], 'num_days_without_victory', 0)
+                self._add_to_counter(match['home'], 'num_days_without_victory', 1)
 
-        #Días sin marcar
-        if int(match['score_home']) > 0:
-            self._set_counter(match['home'], 'num_days_without_goals', 0)
-        else:
-            self._add_to_counter(match['home'], 'num_days_without_goals', 1)
+            if match_winner == 'none':
+                self._add_to_counter(match['home'], 'num_days_without_victory', 1)
+                self._add_to_counter(match['away'], 'num_days_without_victory', 1)
 
-        if int(match['score_away']) > 0:
-            self._set_counter(match['away'], 'num_days_without_goals', 0)
-        else:
-            self._add_to_counter(match['away'], 'num_days_without_goals', 1)
+            # Días sin marcar
+            if int(match['score_home']) > 0:
+                self._set_counter(match['home'], 'num_days_without_goals', 0)
+            else:
+                self._add_to_counter(match['home'], 'num_days_without_goals', 1)
+
+            if int(match['score_away']) > 0:
+                self._set_counter(match['away'], 'num_days_without_goals', 0)
+            else:
+                self._add_to_counter(match['away'], 'num_days_without_goals', 1)
 
 
 
@@ -176,6 +178,8 @@ class MatchesFactsAggregator:
         return entry
 
     def _winner(self, match):
+        if match['score_home'] == '':
+            return ''
         if int(match['score_home']) > int(match['score_away']):
             return 'home'
         if int(match['score_home']) < int(match['score_away']):

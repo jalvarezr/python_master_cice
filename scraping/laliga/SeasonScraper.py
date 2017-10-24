@@ -10,6 +10,7 @@ class SeasonScraper:
     def __init__(self):
         self.sender = scrape_request.Sender()
         self.sender.set_delay(2)
+        self.sender.set_debug_level(2)
         self.logger = Logger(2)
 
     def scrape_page(self, season):
