@@ -6,9 +6,9 @@ from bs4 import BeautifulSoup
 
 class ResultsCurrentYearScraper:
 
-    def __init__(self, logger = Logger()):
+    def __init__(self):
         self.sender = Sender()
-        self.logger = logger
+        self.logger = Logger(2)
         self.url = 'http://www.marca.com/futbol/primera-division/calendario.html'
         self.raw_content = ''
         self.writer = PrefixedMongoWrapper('marca')
@@ -23,6 +23,8 @@ class ResultsCurrentYearScraper:
             exit()
 
     def scrape(self):
+        self.logger.debug('Downloading marca web data')
+
         self._getPage()
         self.writer.drop_collection(self.collection_name)
 
@@ -36,6 +38,7 @@ class ResultsCurrentYearScraper:
             dictionary_to_insert = {'day': day_info, 'results': results}
             self.writer.write_dictionary(self.collection_name, dictionary_to_insert)
 
+        self.logger.debug('Done')
 
     def extract_day(self, day_table):
         header = day_table.find('span')

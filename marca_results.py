@@ -5,8 +5,7 @@ from scraping.core import stdout_logger
 
 print('START')
 
-logger = stdout_logger.Logger(2)
-s = scraper.ResultsCurrentYearScraper(logger)
+s = scraper.ResultsCurrentYearScraper()
 s.scrape()
 
 print('END')

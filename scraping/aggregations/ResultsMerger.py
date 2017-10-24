@@ -22,11 +22,16 @@ class ResultsMerger:
                          'score_away': ''}
 
     def merge(self):
+
+        self.logger.debug('Merging...')
+
         results = []
         results += self._get_archive_results()
         results += self._get_current_results()
 
         self.logger.debug('Processed ' + str(len(results)) + ' matches')
+
+        self.logger.debug('Done')
         return results
 
     def save(self, result):

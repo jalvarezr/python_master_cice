@@ -21,10 +21,16 @@ class AsClassificationScraper:
         return self.writer_obj
 
     def scrape_page(self):
+
+        self.writer().drop_collection('classification')
+        self.logger.debug('Downloading as web classifications data')
+
         sender = scrape_request.Sender()
         sender.set_debug_level(2)
         raw_html = sender.get('https://resultados.as.com/resultados/futbol/primera/clasificacion/', {})
         self.process_page(raw_html)
+
+        self.logger.debug('Done')
 
     def process_page(self, raw_html):
         html = BeautifulSoup(raw_html, 'html.parser')

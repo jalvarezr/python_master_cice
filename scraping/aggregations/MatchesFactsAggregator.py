@@ -1,4 +1,5 @@
 from scraping.core.prefixed_mongo_wrapper import PrefixedMongoWrapper
+from scraping.core.stdout_logger import Logger
 
 import pymongo
 
@@ -18,6 +19,7 @@ class MatchesFactsAggregator:
         self.results = []
 
         self.counters = {}
+        self.logger = Logger(2)
 
         #Diccionario con los datos recientes. Ver self._update_counters
         self.teams_recent_history = {}
@@ -194,6 +196,8 @@ class MatchesFactsAggregator:
         Añade un atributo fecha en formato yyyymmgg para poder ordenar
         :return:
         '''
+
+        self.logger.debug('Reindexing...')
         self.mongo_wrapper.drop_collection(self.collection)
 
         for match in self.mongo_wrapper.get_collection('primera_results').find():
@@ -205,6 +209,7 @@ class MatchesFactsAggregator:
 
             self.mongo_wrapper.write_dictionary(self.collection, match)
 
+        self.logger.debug('Done')
 
     def _init_counters(self):
         self.counters = {}
