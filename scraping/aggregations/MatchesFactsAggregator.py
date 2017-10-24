@@ -12,9 +12,9 @@ class MatchesFactsAggregator:
     generando en self.counter_template, y poner conforme los valores en _update_counters
     '''
     def __init__(self):
-        self.prefix = 'laliga_web'
+        self.prefix = 'etl_results'
         self.mongo_wrapper = PrefixedMongoWrapper(self.prefix)
-        self.collection = 'ordered_matches'
+        self.collection = 'all'
         self.results = []
 
         self.counters = {}
@@ -115,7 +115,7 @@ class MatchesFactsAggregator:
 
     def process_matches_played(self, season):
         self._init_counters()
-        for match in self._collection().find({'season': season}).sort([('day_yyyymmgg', pymongo.ASCENDING)]):
+        for match in self._collection().find({'season': season}).sort([('day_num', pymongo.ASCENDING)]):
             entry = self._process_match(match)
 
             entry['season'] = match['season']
@@ -210,7 +210,7 @@ class MatchesFactsAggregator:
         self.counters = {}
         self.teams_recent_history = {}
 
-        for team in self.mongo_wrapper.get_collection('primera_results').find().distinct("home"):
+        for team in self._collection().find().distinct("home"):
             self.counters[team] = self.counter_template.copy()
             self.teams_recent_history[team] = {'goals': []}
 

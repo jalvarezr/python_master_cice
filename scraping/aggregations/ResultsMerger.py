@@ -83,6 +83,8 @@ class ResultsMerger:
         for day in wrapper.get_collection('current_season_results').find():
             for match in day['results']:
 
+                match['result'] = self._marca_process_result(match['result'])
+
                 entry = self.template.copy()
                 entry['day_num'] = int(day['day']['num_day'].replace('Jornada', '').strip())
                 entry['home'] = self.mapper.find_team_id('marca', match['home'])
@@ -101,6 +103,24 @@ class ResultsMerger:
                 result.append(entry)
         return result
 
+    def _marca_process_result(self, text):
+        '''
+
+        En la web de marca en las celdas con los resultados pueden haber tres tipos de info, por ejemplo:
+        1-1
+        Sab-  13:00
+        Sin confirmar
+
+        controlamos simplemente por longitud del text
+
+        :param text:
+        :return:
+        '''
+        result = ''
+        if len(text) < 8:
+            result = text
+
+        return result
 
 
 
