@@ -121,6 +121,7 @@ class MatchesFactsAggregator:
             entry = self._process_match(match)
 
             entry['season'] = match['season']
+            entry['day_num'] = match['day_num']
 
             entry['team_home'] = match['home']
             entry['team_away'] = match['away']
@@ -190,26 +191,6 @@ class MatchesFactsAggregator:
 
     def _set_counter(self, team, key, value):
         self.counters[team][key] = value
-
-    def reindex(self):
-        '''
-        Añade un atributo fecha en formato yyyymmgg para poder ordenar
-        :return:
-        '''
-
-        self.logger.debug('Reindexing...')
-        self.mongo_wrapper.drop_collection(self.collection)
-
-        for match in self.mongo_wrapper.get_collection('primera_results').find():
-            tmp = match['day'].split('-')
-            if len(tmp[0]) == 1:
-                tmp[0]= '0' + tmp[0]
-            converted = tmp[2] + tmp[1] + tmp[0]
-            match['day_yyyymmgg'] = converted
-
-            self.mongo_wrapper.write_dictionary(self.collection, match)
-
-        self.logger.debug('Done')
 
     def _init_counters(self):
         self.counters = {}

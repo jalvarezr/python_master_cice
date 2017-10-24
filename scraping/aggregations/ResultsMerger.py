@@ -46,8 +46,7 @@ class ResultsMerger:
     def _get_archive_results(self):
         self.logger.debug('Getting archive results')
         wrapper = scraping.laliga.utils.create_mongo_writer()
-        #archive = wrapper.get_collection('ordered_matches').find({'day_yyyymmgg': {"$gt": '20170101'}}).sort([('day_yyyymmgg', pymongo.ASCENDING)])
-        archive = wrapper.get_collection('ordered_matches').find().sort([('day_yyyymmgg', pymongo.ASCENDING)])
+        archive = wrapper.get_collection('primera_results').find().sort([('day_num', pymongo.ASCENDING)])
         result = []
 
         #el historico

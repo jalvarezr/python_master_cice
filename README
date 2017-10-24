@@ -10,11 +10,6 @@ marca_results.py
 as.py
 - baja los las clasificaciones desde la web de as
 
-
-reindex_historic_archive.py
-- "indexa" el historico añadiendo una colleccion 'laliga_web_ordered_matches' obtenida añadiendo una columna en formato yyyymmdd a la collección
-de resultados
-
 merge_results.py
 - genera la collección etl_results_all con los datos de archivo y temporada corriente
 
