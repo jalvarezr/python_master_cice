@@ -1,7 +1,7 @@
 from scraping.aggregations.MatchesFactsAggregator import MatchesFactsAggregator
 from scraping.laliga import utils
 
-csv_filename = './dataset_partidos.csv'
+csv_filename = './dataset_partidos_past.csv'
 if csv_filename == '':
     print('Setea la ruta completa del fichero CSV')
     exit()

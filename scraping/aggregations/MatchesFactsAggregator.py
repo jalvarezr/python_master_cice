@@ -5,7 +5,7 @@ import pymongo
 
 class MatchesFactsAggregator:
     '''
-    Genera la tabla de facts partidos en csv.
+    Genera la tabla de facts partidos en csv considerando los partidos terminados
 
     En self.counters se van actualizando los valores incrementales, tipo los goles marcados a la fecha.
 
@@ -129,8 +129,8 @@ class MatchesFactsAggregator:
             entry['team_away'] = match['away']
 
             entry['winner'] = self._winner(match)
-
-            self._add_to_results(entry)
+            if entry['winner'] != '':
+                self._add_to_results(entry)
 
 
 
